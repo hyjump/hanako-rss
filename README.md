@@ -111,20 +111,10 @@ hanako-rss/
 │   └── storage/
 │       └── json-store.js
 ├── tools/
-│   ├── add_feed.js
-│   ├── list_feeds.js
-│   ├── update_feed.js
-│   ├── remove_feed.js
-│   ├── enable_feed.js
-│   ├── disable_feed.js
-│   ├── refresh_feed.js
-│   ├── refresh_all_feeds.js
-│   ├── list_unread_items.js
-│   ├── read_feed_items.js
-│   ├── mark_item_read.js
-│   ├── mark_feed_read.js
-│   ├── import_opml.js
-│   └── export_opml.js
+│   ├── feeds.js
+│   ├── items.js
+│   ├── sync.js
+│   └── opml.js
 ├── commands/
 │   ├── rss-add.js
 │   ├── rss-list.js
@@ -148,28 +138,37 @@ hanako-rss/
 
 > Hanako 会根据插件规范自动给工具加命名空间；这里 **只导出裸 tool name**，不硬编码完整调用名。
 
-### A. 订阅管理
+这版插件把 agent-facing tools 从 14 个收敛成 4 个，减少上下文占用，同时保留原有 service 层逻辑。
 
-- `add_feed`：通过 URL 添加 RSS / Atom feed，并立刻抓取一次
-- `list_feeds`：列出 feed，附带未读数、最近刷新状态
-- `update_feed`：修改 feed 的标题、URL、描述、启用状态等元信息
-- `remove_feed`：删除 feed，并可删除其缓存条目
-- `enable_feed`：启用 feed
-- `disable_feed`：禁用 feed
+- `feeds`：添加、列出、更新、删除 feed，或启用 / 禁用 feed
+- `items`：列出未读 / 最近条目，或标记 item / feed 已读
+- `sync`：刷新一个 feed 或全部 feed
+- `opml`：导入或导出 OPML
 
-### B. 拉取与阅读
+### `feeds`
 
-- `refresh_feed`：手动刷新单个 feed
-- `refresh_all_feeds`：手动刷新全部 feed
-- `list_unread_items`：查看未读条目
-- `read_feed_items`：按 feed 查看最近条目
-- `mark_item_read`：标记单条已读 / 未读
-- `mark_feed_read`：标记某个 feed 全部已读 / 未读
+- `action=add`：通过 URL 添加 RSS / Atom feed，并立刻抓取一次
+- `action=list`：列出 feed，附带未读数、最近刷新状态
+- `action=update`：修改 feed 元信息
+- `action=remove`：删除 feed，并可删除其缓存条目
+- `action=set_enabled`：启用或禁用 feed
 
-### C. 导入导出
+### `items`
 
-- `import_opml`：导入 OPML
-- `export_opml`：导出 OPML 到文件
+- `action=list, mode=unread`：查看未读条目
+- `action=list, mode=recent`：查看最近条目
+- `action=mark, targetType=item`：标记单条已读 / 未读
+- `action=mark, targetType=feed`：标记某个 feed 全部已读 / 未读
+
+### `sync`
+
+- `scope=one`：刷新单个 feed
+- `scope=all`：刷新全部 feed
+
+### `opml`
+
+- `action=import`：导入 OPML
+- `action=export`：导出 OPML 到文件
 
 ---
 
@@ -313,12 +312,12 @@ hanako-rss/
 
 Hanako 可以用 cron / heartbeat 定期触发 agent。你可以在 agent 的自动任务里明确写：
 
-> 定时调用 `refresh_all_feeds`，然后检查 `list_unread_items` 是否有新内容，再按需要整理摘要。
+> 定时调用 `sync(scope=all)`，然后检查 `items(action=list, mode=unread)` 是否有新内容，再按需要整理摘要。
 
 例如一个简单策略：
 
 1. 每小时运行一次
-2. 调用 `refresh_all_feeds`
+2. 调用 `sync` 且 `scope=all`
 3. 若失败 feed 存在，则记录错误摘要
 4. 若未读条目 > 0，再继续阅读或总结
 
@@ -354,18 +353,19 @@ npm run smoke
 
 ### 作为 agent 工具使用
 
-1. 调用 `list_feeds`
-2. 若没有订阅，则调用 `add_feed`
-3. 再调用 `refresh_feed` 或 `refresh_all_feeds`
-4. 用 `list_unread_items` 获取未读
-5. 读完后用 `mark_item_read` 或 `mark_feed_read`
+1. 调用 `feeds` 且 `action=list`
+2. 若没有订阅，则调用 `feeds` 且 `action=add`
+3. 再调用 `sync` 刷新一个或全部 feed
+4. 用 `items` 且 `action=list` 获取未读或最近条目
+5. 读完后用 `items` 且 `action=mark` 更新阅读状态
 
 示例：
 
 ```json
 {
-  "tool": "add_feed",
+  "tool": "feeds",
   "input": {
+    "action": "add",
     "url": "https://example.com/feed.xml"
   }
 }
@@ -375,8 +375,9 @@ npm run smoke
 
 ```json
 {
-  "tool": "import_opml",
+  "tool": "opml",
   "input": {
+    "action": "import",
     "filePath": "/absolute/path/to/subscriptions.opml",
     "refreshAfterImport": true
   }
@@ -387,8 +388,10 @@ npm run smoke
 
 ```json
 {
-  "tool": "export_opml",
-  "input": {}
+  "tool": "opml",
+  "input": {
+    "action": "export"
+  }
 }
 ```
 
