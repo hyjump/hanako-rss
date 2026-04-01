@@ -1,0 +1,27 @@
+{
+  "id": "hanako-rss",
+  "name": "Hanako RSS",
+  "version": "0.1.0",
+  "description": "RSS / Atom 订阅管理插件，提供订阅、刷新、未读阅读与 OPML 导入导出工具。",
+  "contributes": {
+    "configuration": {
+      "properties": {
+        "requestTimeoutMs": {
+          "type": "number",
+          "default": 15000,
+          "title": "请求超时（毫秒）"
+        },
+        "defaultListLimit": {
+          "type": "number",
+          "default": 20,
+          "title": "默认列表条数"
+        },
+        "requestUserAgent": {
+          "type": "string",
+          "default": "hanako-rss/0.1.0 (+https://github.com/liliMozi/openhanako)",
+          "title": "HTTP User-Agent"
+        }
+      }
+    }
+  }
+}

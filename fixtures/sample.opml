@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head>
+    <title>Hanako RSS Sample OPML</title>
+    <dateCreated>Tue, 31 Mar 2026 10:00:00 GMT</dateCreated>
+    <dateModified>Tue, 31 Mar 2026 10:00:00 GMT</dateModified>
+  </head>
+  <body>
+    <outline text="Examples">
+      <outline text="Example RSS Feed" title="Example RSS Feed" type="rss" xmlUrl="https://example.com/rss.xml" htmlUrl="https://example.com/" description="RSS fixture" />
+      <outline text="Example Atom Feed" title="Example Atom Feed" type="rss" xmlUrl="https://example.com/atom.xml" htmlUrl="https://example.com/atom" description="Atom fixture" />
+    </outline>
+  </body>
+</opml>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Example Atom Feed</title>
+  <subtitle>Example Atom feed for hanako-rss smoke tests.</subtitle>
+  <link rel="alternate" href="https://example.com/atom" />
+  <link rel="self" href="https://example.com/atom/feed.xml" />
+  <updated>2026-03-31T10:00:00Z</updated>
+  <author>
+    <name>Atom Author</name>
+  </author>
+  <id>tag:example.com,2026:atom-feed</id>
+  <entry>
+    <title>Atom Entry One</title>
+    <link rel="alternate" href="https://example.com/atom/entry-1" />
+    <id>tag:example.com,2026:atom-entry-1</id>
+    <updated>2026-03-31T10:00:00Z</updated>
+    <published>2026-03-31T09:50:00Z</published>
+    <summary type="html">&lt;p&gt;Atom summary one.&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Atom full content one.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Atom Entry Two</title>
+    <link rel="alternate" href="https://example.com/atom/entry-2" />
+    <id>tag:example.com,2026:atom-entry-2</id>
+    <updated>2026-03-31T10:05:00Z</updated>
+    <summary type="text">Atom summary two.</summary>
+  </entry>
+</feed>

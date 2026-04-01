@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Example RSS Feed</title>
+    <link>https://example.com/</link>
+    <description>Example RSS feed for hanako-rss smoke tests.</description>
+    <generator>hanako-rss-fixture</generator>
+    <item>
+      <title>RSS Entry One</title>
+      <link>https://example.com/rss/entry-1</link>
+      <guid isPermaLink="false">rss-entry-1</guid>
+      <pubDate>Tue, 31 Mar 2026 08:30:00 GMT</pubDate>
+      <description><![CDATA[<p>This is the first RSS entry.</p>]]></description>
+      <content:encoded><![CDATA[<p>This is the <strong>full</strong> RSS content.</p>]]></content:encoded>
+      <author>alice@example.com (Alice)</author>
+    </item>
+    <item>
+      <title>RSS Entry Two</title>
+      <link>https://example.com/rss/entry-2</link>
+      <guid isPermaLink="false">rss-entry-2</guid>
+      <pubDate>Tue, 31 Mar 2026 09:00:00 GMT</pubDate>
+      <description><![CDATA[<p>This is the second RSS entry.</p>]]></description>
+    </item>
+  </channel>
+</rss>
